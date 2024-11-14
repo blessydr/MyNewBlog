@@ -1,0 +1,237 @@
+
+{%block content%}
+<style>
+    .blog-details {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .blog-details h2 {
+        color: #333;
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .author {
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .content {
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 30px;
+    }
+
+    .back-button a {
+        text-decoration: none;
+        color: white;
+        background-color: #3498db;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
+    .back-button a:hover {
+        background-color: #2980b9;
+    }
+
+
+    /* Comment Section */
+h3 {
+    font-size: 24px;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+ul li strong {
+    font-size: 16px;
+    color: #007bff;
+}
+
+ul li small {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+
+/* Comment Form */
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    resize: vertical; /* Allow vertical resizing */
+}
+
+textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0px 0px 3px rgba(0, 123, 255, 0.3);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h3 {
+        font-size: 20px;
+    }
+
+    ul li {
+        padding: 12px;
+    }
+
+    textarea {
+        font-size: 13px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    h3 {
+        font-size: 18px;
+    }
+
+    textarea {
+        font-size: 12px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}
+.comment-actions {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.comment-actions a {
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-right: 10px;
+    display: inline-block;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+/* Edit button style with icon */
+.edit-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+
+.edit-button:hover {
+    background-color: #218838;
+}
+
+.edit-button i {
+    margin-right: 8px;
+}
+
+/* Delete button style with icon */
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.delete-button i {
+    margin-right: 8px;
+}
+
+li {
+    margin-bottom: 20px;
+}
+</style>
+
+<div class="blog-details">
+    <h2>{{ blogs.title }}</h2>
+    <p class="author">By {{ blogs.author }} | {{ blogs.created_at|date:"F d, Y" }}</p>
+    
+    <div class="content">
+        <p>{{ blogs.content }}</p>
+    </div>
+    <div class="tags">
+        <strong>Tags:</strong>
+        {% if blogs.tags.all %}
+            {% for tag in blogs.tags.all %}
+                <span class="tag">{{ tag.name }} ,</span>
+            {% endfor %}
+        {% else %}
+            <span class="no-tags">No tags available</span>
+        {% endif %}
+    </div> 
+    <h3>Comments:</h3>
+    <ul>
+        {% for comment in blogs.comments.all %}
+            <li>
+                <strong>{{ comment.author.username }}:</strong> {{ comment.content }} <br>
+                <small>Posted on {{ comment.created_at }}</small>
+                {% if comment.author == user %}
+                | <a href="{% url 'edit_comment' comment.id %}">Edit</a>
+                | <a href="{% url 'delete_comment' comment.id %}" onclick="return confirm('Are you sure you want to delete this comment?');">Delete</a> |
+            {% endif %}
+            </li>
+
+        {% endfor %}
+    </ul>
+    <h3>Leave a Comment:</h3>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="content" rows="4" placeholder="Write your comment..."></textarea><br>
+        <button type="submit">Submit Comment</button>
+    </form>
+    
+    <br><br>
+    <div class="back-button">
+        <a href="{% url 'home' %}">Back to Home</a>
+    </div>
+</div>
+{%endblock%}

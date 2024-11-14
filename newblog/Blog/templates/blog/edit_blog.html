@@ -1,0 +1,112 @@
+{% block content %}
+<style>
+    .edit-blog-container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: #3498db;
+        outline: none;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .save-button,
+    .cancel-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .save-button {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .save-button:hover {
+        background-color: #2980b9;
+    }
+
+    .cancel-button {
+        background-color: #e74c3c;
+        color: white;
+    }
+
+    .cancel-button:hover {
+        background-color: #c0392b;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .save-button,
+        .cancel-button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<div class="edit-blog-container">
+    <h2>Edit Blog</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" value="{{ blog.title }}" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Content:</label>
+            <textarea name="content" id="content" rows="10" required>{{ blog.content }}</textarea>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="save-button">Save Changes</button>
+            <a href="{% url 'blog_details' blog.id %}" class="cancel-button">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
